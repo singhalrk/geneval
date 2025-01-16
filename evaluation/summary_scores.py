@@ -9,6 +9,7 @@ import pandas as pd
 
 parser = argparse.ArgumentParser()
 parser.add_argument("filename", type=str)
+# parser.add_argument("--bon", type=bool, default=False)
 args = parser.parse_args()
 
 # Load classnames
@@ -18,7 +19,6 @@ with open(os.path.join(os.path.dirname(__file__), "object_names.txt")) as cls_fi
     cls_to_idx = {"_".join(cls.split()):idx for idx, cls in enumerate(classnames)}
 
 # Load results
-
 df = pd.read_json(args.filename, orient="records", lines=True)
 
 # Measure overall success
@@ -32,8 +32,11 @@ print(f"% correct prompts: {df.groupby('metadata')['correct'].any().mean():.2%}"
 print()
 
 # By group
-
 task_scores = []
+
+# filter df by filename ending in 0000.png
+# if args.bon:
+#     df = df[df['filename'].str.endswith("0000.png")]
 
 print("Task breakdown")
 print("==============")
